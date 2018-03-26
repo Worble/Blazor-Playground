@@ -1,4 +1,24 @@
-﻿<div class='main-nav'>
+﻿@using Store
+@inject CounterStore counterStore
+@implements IDisposable
+@functions{
+    protected override void OnInit()
+    {
+        counterStore.StateHasChanged += HandleStateChange;
+        base.OnInit();
+    }
+
+    public void HandleStateChange(object sender, EventArgs e)
+    {
+        this.StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        counterStore.StateHasChanged -= HandleStateChange;
+    }
+}
+<div class='main-nav'>
     <div class='navbar navbar-inverse'>
         <div class='navbar-header'>
             <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
@@ -19,12 +39,12 @@
                 </li>
                 <li>
                     <NavLink href="/counter">
-                        <span class='glyphicon glyphicon-education'></span> Counter
+                        <span class='glyphicon glyphicon-education'></span> Counter (Current Count: @counterStore.GetCount())
                     </NavLink>
                 </li>
                 <li>
                     <NavLink href="/fetchdata">
-                        <span class='glyphicon glyphicon-th-list'></span> Fetch data
+                         <span class='glyphicon glyphicon-th-list'></span> Fetch data
                     </NavLink>
                 </li>
             </ul>
