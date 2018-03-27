@@ -12,7 +12,7 @@ namespace WebApplication1
         {
             var serviceProvider = new BrowserServiceProvider(configure =>
             {
-                configure.Add(ServiceDescriptor.Singleton<CounterStore, CounterStore>());
+                configure.Add(ServiceDescriptor.Singleton<Store.Store, Store.Store>());
             });
 
             new BrowserRenderer(serviceProvider).AddComponent<App>("app");

@@ -1,21 +1,9 @@
 ﻿@using Store
-@inject CounterStore counterStore
-@implements IDisposable
+@inject Store store
 @functions{
     protected override void OnInit()
     {
-        counterStore.StateHasChanged += HandleStateChange;
-        base.OnInit();
-    }
-
-    public void HandleStateChange(object sender, EventArgs e)
-    {
-        this.StateHasChanged();
-    }
-
-    public void Dispose()
-    {
-        counterStore.StateHasChanged -= HandleStateChange;
+        store.CounterStore.OnChange += StateHasChanged;
     }
 }
 <div class='main-nav'>
@@ -39,12 +27,22 @@
                 </li>
                 <li>
                     <NavLink href="/counter">
-                        <span class='glyphicon glyphicon-education'></span> Counter (Current Count: @counterStore.GetCount())
+                        <span class='glyphicon glyphicon-education'></span> Counter (Current Count: @store.CounterStore.GetCount())
                     </NavLink>
                 </li>
                 <li>
                     <NavLink href="/fetchdata">
-                         <span class='glyphicon glyphicon-th-list'></span> Fetch data
+                        <span class='glyphicon glyphicon-th-list'></span> Fetch data
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink href="/command-line">
+                        <span class='glyphicon glyphicon-th-list'></span> Command Line
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink href="/boards">
+                        <span class='glyphicon glyphicon-th-list'></span> Forum
                     </NavLink>
                 </li>
             </ul>

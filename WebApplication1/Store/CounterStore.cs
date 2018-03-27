@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Store
 {
-    public class CounterStore : IStore
+    public class CounterStore
     {
-        const int MS_MODIFIER = 50;
+        const int MS_MODIFIER = 100;
 
         //CTOR  
         public CounterStore()
@@ -27,7 +27,7 @@ namespace WebApplication1.Store
         }
 
         //MODEL
-        public event EventHandler StateHasChanged;
+        public event Action OnChange;
         public Counter Counter { get; private set; }
 
         //UPDATE
@@ -45,7 +45,7 @@ namespace WebApplication1.Store
         {
             CalculateCountPerSecond();
             this.Counter.CurrentCount += Counter.CountPerSecond / (1000 / MS_MODIFIER);
-            StateChanged(new EventArgs());
+            NotifyStateChanged();
         }
 
         public void CalculateCountPerSecond()
@@ -68,10 +68,8 @@ namespace WebApplication1.Store
                 CalculateCountPerSecond();
             }
         }
-        protected virtual void StateChanged(EventArgs args)
-        {
-            StateHasChanged?.Invoke(this, args);
-        }        
+
+        private void NotifyStateChanged() => OnChange?.Invoke();
     }
 
     //MODELS

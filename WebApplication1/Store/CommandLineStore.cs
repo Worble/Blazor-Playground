@@ -5,7 +5,11 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Store
 {
-    public interface IStore
+    public class CommandLineStore
     {
+        public event Action OnChange;
+        private void NotifyStateChanged() => OnChange?.Invoke();
+
+
     }
 }

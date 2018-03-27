@@ -13,4 +13,38 @@
     <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <BlazorGenerate Remove="Pages\CommandLine.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Forum\Threads.cshtml" />
+    <None Include="Pages\Forum\Posts.cshtml" />
+    <None Include="Pages\Forum\Boards.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BlazorGenerate Remove="Pages\Posts.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Pages\Posts.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BlazorGenerate Remove="Pages\Threads.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BlazorGenerate Remove="Pages\Boards.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BlazorGenerate Remove="Shared\MainLayout - Copy.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BlazorGenerate Remove="Shared\Forum\BoardQuickSelect.cshtml" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,59 @@
+﻿@page "/boards/{BoardId}/threads/{ThreadId}/posts/"
+@using Store
+@inject Store store
+@implements IDisposable
+@functions{
+    protected override void OnInit()
+    {
+        store.ForumStore.OnChange += StateHasChanged;
+    }
+
+    protected override async void OnParametersSet()
+    {
+        await store.ForumStore.GetAllPostsForThread(int.Parse(BoardId), int.Parse(ThreadId));
+        base.OnParametersSet();
+    }
+
+    public string BoardId { get; set; }
+    public string ThreadId { get; set; }
+    public string Content { get; set; }
+
+    public async void NewPost()
+    {
+        if (!string.IsNullOrWhiteSpace(Content))
+        {
+            await store.ForumStore.PostPost(int.Parse(BoardId), int.Parse(ThreadId), Content);
+            Content = string.Empty;
+            StateHasChanged();
+        }
+    }
+
+    public void Dispose()
+    {
+        store.ForumStore.OnChange -= StateHasChanged;
+    }
+}
+@if (store.ForumStore.Board == null || store.ForumStore.Board.thread == null || store.ForumStore.Board.thread.posts == null || store.ForumStore.Board.thread.id != int.Parse(ThreadId))
+{
+    <div style="display: flex;background-color: lightgrey;height: 100vh;width: 100%;">
+        <div class="ball" style="margin:auto;"></div>
+    </div>
+}
+else
+{
+    <BoardQuickSelect />
+    <h1>Posts in thread @store.ForumStore.Board.thread.id</h1>
+    <ul>
+        @foreach (var item in store.ForumStore.Board.thread.posts)
+        {
+            <li>@item.content</li>
+        }
+    </ul>
+    <div>
+        <span>New post: </span><input type="text" @bind(Content) />
+        <button type="submit" @onclick(NewPost)>Submit</button>
+    </div>
+    <div>
+        <a href="/boards/@store.ForumStore.Board.id/threads/">Back to threads</a>
+    </div>
+}

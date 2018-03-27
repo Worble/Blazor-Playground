@@ -1,0 +1,63 @@
+﻿@page "/boards/{BoardId}/threads/"
+@using Store
+@inject Store store
+@inject Microsoft.AspNetCore.Blazor.Services.IUriHelper UriHelper
+@implements IDisposable
+@functions{
+
+    protected override void OnInit()
+    {
+        store.ForumStore.OnChange += StateHasChanged;
+    }
+
+    protected override async void OnParametersSet()
+    {
+        await store.ForumStore.GetAllThreadsForBoard(int.Parse(BoardId));
+        base.OnParametersSet();
+    }
+
+    public string BoardId { get; set; }
+    public string Content { get; set; }
+
+    public async void NewThread()
+    {
+        if (!string.IsNullOrWhiteSpace(Content))
+        {
+            await store.ForumStore.PostThread(int.Parse(BoardId), Content);
+            UriHelper.NavigateTo("/boards/" + store.ForumStore.Board.id + "/threads/" + store.ForumStore.Board.thread.id + "/posts/");
+        }
+    }
+
+    public void Dispose()
+    {
+        store.ForumStore.OnChange -= StateHasChanged;
+    }
+}
+<BoardQuickSelect />
+@if (store.ForumStore.Board == null || store.ForumStore.Board.threads == null || store.ForumStore.Board.id != int.Parse(BoardId))
+{
+    <div style="display: flex;background-color: lightgrey;height: 100vh;width: 100%;">
+        <div class="ball" style="margin:auto;"></div>
+    </div>
+}
+else
+{
+    <h1>Threads in @store.ForumStore.Board.name</h1>
+    <ul>
+        @foreach (var item in store.ForumStore.Board.threads)
+        {
+            <li>
+                <a href="/boards/@store.ForumStore.Board.id/threads/@item.id/posts/">
+                    @item.posts.FirstOrDefault().content
+                </a>
+            </li>
+        }
+    </ul>
+    <div>
+        <span>New thread: </span><input type="text" @bind(Content) />
+        <button type="submit" @onclick(NewThread)>Submit</button>
+    </div>
+}
+<div>
+    <a href="/boards/">Back to boards</a>
+</div>
